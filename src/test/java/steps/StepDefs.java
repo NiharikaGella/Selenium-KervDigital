@@ -51,28 +51,32 @@ public class StepDefs extends Page implements En {
 
 		
 		
-		Given("Navigate to kerv Digital site", () -> {
+		Given("^Navigate to kerv Digital site using (.*)$", (String url) -> {
 
-			getUrl("https://kerv.com/");
+			getUrl(url);
 			if(driver.findElement(By.xpath("(//*[local-name()='svg' and contains(@transform,'')])[1]")).isDisplayed())
-			{e.log(Status.PASS, "Kerv Digital website launched successfully");}
-			else {e.log(Status.FAIL, "failed to launch Kerv Digital website");}
+			{
+				e.log(Status.PASS, "Kerv Digital website launched successfully");
+				}
+			else {
+				e.log(Status.FAIL, "failed to launch Kerv Digital website");
+				}
 
 		});
 		Given("Scroll down to get rid of cookie warning", () -> {
 			Driver.waitTillElementVisible("(//a[@class='_brlbs-btn _brlbs-btn-accept-all _brlbs-cursor'])[1]");
-			driver.findElement(By.xpath("(//a[@class='_brlbs-btn _brlbs-btn-accept-all _brlbs-cursor'])[1]")).click();
+			clickAButton("//a[@class='_brlbs-btn _brlbs-btn-accept-all _brlbs-cursor'])[1]",
+					"(//div[@class='navbar__link navbar__link--root navbar__link--has-children'])[6]");
 			e.log(Status.PASS, "Got rid of cookie warning");
 		});
 		When("User opens right-side menu and click on Careers page", () -> {
 			Driver.waitTillElementClickable("(//div[@class='navbar__link navbar__link--root navbar__link--has-children'])[6]");
 			driver.findElement(By.xpath("(//div[@class='navbar__link navbar__link--root navbar__link--has-children'])[6]")).click();
-			//Driver.waitTillElementClickable("//div[@class='navbar__link navbar__link--root navbar__link--has-children']//child::a[text()='Careers']");
+			
 			driver.findElement(By.xpath("//div[@class='navbar__link navbar__link--root navbar__link--has-children']//child::a[text()='Careers']")).click();
 
 		});
 		When("Clicks on ‘Look for Job opportunities’", () -> {
-
 
 			js.executeScript("window.scrollBy(0,300)", "");
 			if(driver.findElement(By.xpath("(//a[@href='https://kerv.com/careers-at-kerv/job-opportunities/'])[4]")).isDisplayed())
@@ -87,19 +91,17 @@ public class StepDefs extends Page implements En {
 			Driver.waitTillElementClickable("(//a[@href='https://kerv.com/careers-at-kerv/job-opportunities/'])[4]");
 
 			driver.findElement(By.xpath("(//a[@href='https://kerv.com/careers-at-kerv/job-opportunities/'])[4]")).click();
-			Thread.sleep(10000);
+			
 			WebElement e= driver.findElement(By.xpath("//button[@title='Search vacancies']"));
-//			Point point = ele.getLocation();
-//			int xcord = point.getX();
-//			int ycord = point.getY();
-			//action.moveToElement(ele, xcord, ycord);
-			// js.executeScript("arguments[0].scrollIntoView(true);",e);
-		//	action.moveToElement(ele);'
-			js.executeScript("window.scrollBy(0,1000)", "");
+			Point point = e.getLocation();
+			int xcord = point.getX();
+			int ycord = point.getY();
+		action.moveToElement(e, xcord, ycord);
+		
 			
 			if(driver.findElement(By.xpath("//div[text()='Filter your search:']")).isDisplayed())
 			{
-				System.out.println("moved yayy");
+				System.out.println("Scrolled");
 			}
 
 			
@@ -119,11 +121,10 @@ public class StepDefs extends Page implements En {
 				e.log(Status.FAIL, "Failed to search for UX designer");
 			}
 			
-			Thread.sleep(1000);
+			
 		Driver.waitTillElementClickable("//button[@title='Search vacancies']");
 		driver.findElement(By.xpath("//button[@title='Search vacancies']")).click();
-		//action.sendKeys(Keys.ENTER);
-
+		
 		});
 		When("Open the first opening, Fill the details and submit", () -> {
 
@@ -133,7 +134,7 @@ public class StepDefs extends Page implements En {
 
 			Driver.waitTillElementClickable("//*[@id='search-results']/div/div[1]/a");
 			driver.findElement(By.xpath("//*[@id='search-results']/div/div[1]/a")).click();
-			Thread.sleep(5000);
+		
 			Set<String> newWindowHandles = driver.getWindowHandles();
 
 			for (String handle : newWindowHandles) {
